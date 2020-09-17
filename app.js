@@ -1,5 +1,5 @@
-// const fs = require('fs');
-// const generatePage = require('./src/page-template.js');
+const fs = require('fs');
+const generatePage = require('./src/page-template.js');
 // const profileDataArgs = process.argv.slice(2)
 // const [name, github] = profileDataArgs
 
@@ -48,7 +48,9 @@ const promptUser = () => {
       type: 'input',
       name: 'about',
       message: "Provide some imformation about yourself:",
-      when:({confirmAbout})=> confirmAbout
+      when: ({
+        confirmAbout
+      }) => confirmAbout
     }
   ])
 };
@@ -135,5 +137,12 @@ const promptProject = portfolioData => {
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
-    console.log(portfolioData);
+    const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
+
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
   })
+
